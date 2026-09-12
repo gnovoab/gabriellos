@@ -17,7 +17,11 @@ interface CheckoutBody {
 export async function POST(request: Request) {
   if (!process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json(
-      { error: "Payments are not configured. Add STRIPE_SECRET_KEY to .env.local." },
+      {
+        error:
+          "Payments are not configured. Set STRIPE_SECRET_KEY in .env.local locally, " +
+          "or in your hosting provider's environment variables (e.g. Vercel), then redeploy.",
+      },
       { status: 500 }
     );
   }

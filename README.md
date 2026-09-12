@@ -114,6 +114,38 @@ ORDER_NOTIFY_EMAIL=you@example.com
 > 💳 **No test card / keys yet?** The checkout page still renders, but the payment step
 > shows a "not configured" message until Stripe keys are present.
 
+## Deploying to Vercel
+
+`.env.local` is **only** for local development — it is git-ignored and **never uploaded**
+to Vercel. On Vercel you must add the same variables in the project settings, or the app
+will report _"Payments are not configured"_ at checkout.
+
+1. **Add environment variables** — Vercel Dashboard → your project → **Settings →
+   Environment Variables**. Add each of these (for the **Production** environment, and
+   Preview if you want previews to work):
+
+   | Variable | Value |
+   | --- | --- |
+   | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | your `pk_test_…` (or `pk_live_…`) |
+   | `STRIPE_SECRET_KEY` | your `sk_test_…` (or `sk_live_…`) |
+   | `STRIPE_WEBHOOK_SECRET` | the `whsec_…` from the **Dashboard** webhook (see step 3) |
+   | `RESEND_API_KEY` | your `re_…` |
+   | `ORDER_FROM_EMAIL` | a verified sender on your domain |
+   | `ORDER_NOTIFY_EMAIL` | the restaurant inbox |
+
+2. **Redeploy** — env vars are only picked up on a new deployment. Trigger a redeploy
+   (Deployments → ⋯ → **Redeploy**, or push a commit). Changing env vars later also
+   requires a redeploy.
+
+3. **Set up the production webhook** — in Stripe Dashboard → **Developers → Webhooks →
+   Add endpoint**, use `https://<your-app>.vercel.app/api/webhook`, subscribe to
+   **`payment_intent.succeeded`**, then copy that endpoint's **Signing secret** (`whsec_…`)
+   into the `STRIPE_WEBHOOK_SECRET` env var on Vercel and redeploy. (The `stripe listen`
+   CLI secret is for local testing only and won't work in production.)
+
+> Use **live** Stripe keys + a **verified Resend domain** only when you're ready to take
+> real orders. Keep test keys for preview deployments.
+
 ## Scripts
 
 | Command | Description |
