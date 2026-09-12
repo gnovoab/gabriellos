@@ -1,0 +1,88 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-serif);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Gabriellos — light parchment / Italian trattoria palette */
+  --background: #FBF5E9;          /* warm parchment */
+  --foreground: #2A1E14;          /* espresso brown */
+  --card: #FFFBF1;                /* paper card */
+  --card-foreground: #2A1E14;
+  --popover: #FFFBF1;
+  --popover-foreground: #2A1E14;
+  --primary: #C2410C;             /* roasted terracotta */
+  --primary-foreground: #FFFBF1;
+  --secondary: #7C5E3B;           /* aged olive wood */
+  --secondary-foreground: #FFFBF1;
+  --muted: #F2E9D5;               /* light parchment shade */
+  --muted-foreground: #6B5440;    /* warm brown for secondary text */
+  --accent: #C2410C;
+  --accent-foreground: #FFFBF1;
+  --destructive: #B91C1C;
+  --border: #E4D6BB;              /* soft warm border */
+  --input: #E4D6BB;
+  --ring: #C2410C;
+  --chart-1: #C2410C;             /* terracotta */
+  --chart-2: #7C5E3B;             /* olive wood */
+  --chart-3: #4D7C3F;             /* basil green */
+  --chart-4: #1E40AF;             /* deep azure */
+  --chart-5: #BE185D;             /* mulberry */
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(rgba(124,94,59,0.06) 1px, transparent 1px),
+      radial-gradient(rgba(124,94,59,0.04) 1px, transparent 1px);
+    background-size: 22px 22px, 11px 11px;
+    background-position: 0 0, 11px 11px;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif), ui-serif, Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+}
