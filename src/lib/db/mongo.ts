@@ -15,7 +15,12 @@ function connect(): Promise<MongoClient> {
   if (!uri) {
     return Promise.reject(new Error("MONGODB_URI is not set"));
   }
-  return new MongoClient(uri).connect();
+  // autoSelectFamily (Node's IPv4/IPv6 happy-eyeballs) races against Atlas's
+  // TLS handshake and can intermittently surface as a spurious
+  // "SSL routines:ssl3_read_bytes:tlsv1 alert internal error". Disabling it
+  // is the documented workaround. See:
+  // https://www.mongodb.com/community/forums/t/unable-to-connect-local-env-to-atlas-ssl-tsl-connection-issue/310045
+  return new MongoClient(uri, { autoSelectFamily: false }).connect();
 }
 
 if (process.env.NODE_ENV === "development") {
