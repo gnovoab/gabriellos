@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { MENU } from "@/lib/menu";
-import type { MenuItem } from "@/lib/menu";
+import { getMenuConfig, type GabriellosMenuItem } from "@/lib/db/menuConfig";
 
 export const metadata: Metadata = {
   title: "Menu — Gabriello's",
@@ -11,8 +10,9 @@ export const metadata: Metadata = {
 // ordering — this is deliberately not linked from the ordering site nav.
 // Mirrors the naming and card style of the pizzaiiolo /menu page (Il Menù,
 // № numbering, image-top cards), scaled up for big-screen display.
-export default function MenuDisplayPage() {
-  const pizzas = [...MENU].sort((a, b) => a.number - b.number);
+export default async function MenuDisplayPage() {
+  const menu = await getMenuConfig();
+  const pizzas = menu.filter((i) => i.available).sort((a, b) => a.number - b.number);
 
   return (
     <div className="min-h-screen">
@@ -44,7 +44,7 @@ export default function MenuDisplayPage() {
   );
 }
 
-function MenuCard({ item }: { item: MenuItem }) {
+function MenuCard({ item }: { item: GabriellosMenuItem }) {
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
       <div className="relative w-full aspect-[4/3] bg-muted border-b border-border/70 flex items-center justify-center">

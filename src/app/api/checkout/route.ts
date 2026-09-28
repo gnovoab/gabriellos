@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { computeOrder, toPence, type Fulfillment, type OrderLineInput } from "@/lib/order";
+import { getMenuConfig } from "@/lib/db/menuConfig";
 
 interface CheckoutBody {
   items?: OrderLineInput[];
@@ -53,7 +54,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "A delivery address is required." }, { status: 400 });
   }
 
-  const order = computeOrder(items, fulfillment);
+  const menuItems = await getMenuConfig();
+  const order = computeOrder(items, fulfillment, menuItems);
   if (order.lines.length === 0 || order.total <= 0) {
     return NextResponse.json({ error: "No valid items in your basket." }, { status: 400 });
   }

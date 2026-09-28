@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { MenuItem } from "@/lib/menu";
+import type { GabriellosMenuItem as MenuItem } from "@/lib/db/menuConfig";
 import { useBasketStore } from "@/store/useBasketStore";
 import { formatPrice } from "@/lib/utils";
 
@@ -64,32 +64,40 @@ export function ItemModal({ item, onClose }: { item: MenuItem; onClose: () => vo
         </div>
 
         <div className="border-t border-border p-4 sm:p-5 flex items-center gap-4 bg-card">
-          <div className="flex items-center gap-3 rounded-full border border-border px-2 py-1.5 shrink-0">
-            <button
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              aria-label="Decrease quantity"
-              className="w-8 h-8 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 text-xl leading-none disabled:opacity-40"
-              disabled={quantity <= 1}
-            >
-              −
-            </button>
-            <span className="min-w-6 text-center font-semibold tabular-nums">{quantity}</span>
-            <button
-              onClick={() => setQuantity((q) => q + 1)}
-              aria-label="Increase quantity"
-              className="w-8 h-8 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 text-xl leading-none"
-            >
-              +
-            </button>
-          </div>
+          {item.available ? (
+            <>
+              <div className="flex items-center gap-3 rounded-full border border-border px-2 py-1.5 shrink-0">
+                <button
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  aria-label="Decrease quantity"
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 text-xl leading-none disabled:opacity-40"
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
+                <span className="min-w-6 text-center font-semibold tabular-nums">{quantity}</span>
+                <button
+                  onClick={() => setQuantity((q) => q + 1)}
+                  aria-label="Increase quantity"
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 text-xl leading-none"
+                >
+                  +
+                </button>
+              </div>
 
-          <button
-            onClick={handleAdd}
-            className="flex-1 flex items-center justify-between gap-3 rounded-full bg-primary text-primary-foreground font-semibold px-5 py-3 shadow-sm hover:brightness-110 active:scale-[0.99] transition"
-          >
-            <span>Add to basket</span>
-            <span className="font-mono tabular-nums">{formatPrice(item.price * quantity)}</span>
-          </button>
+              <button
+                onClick={handleAdd}
+                className="flex-1 flex items-center justify-between gap-3 rounded-full bg-primary text-primary-foreground font-semibold px-5 py-3 shadow-sm hover:brightness-110 active:scale-[0.99] transition"
+              >
+                <span>Add to basket</span>
+                <span className="font-mono tabular-nums">{formatPrice(item.price * quantity)}</span>
+              </button>
+            </>
+          ) : (
+            <span className="flex-1 text-center text-sm font-medium uppercase tracking-wide text-muted-foreground">
+              Currently unavailable
+            </span>
+          )}
         </div>
       </div>
     </div>

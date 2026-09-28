@@ -1,4 +1,4 @@
-import { getItemById } from "@/lib/menu";
+import type { GabriellosMenuItem } from "@/lib/db/menuConfig";
 
 export const DELIVERY_FEE = 2.5;
 
@@ -26,17 +26,22 @@ export interface OrderTotals {
 
 /**
  * Recompute an order from trusted menu data. Prices are never taken from the
- * client — only item ids and quantities are, so the amount can't be tampered with.
+ * client — only item ids and quantities are, so the amount can't be tampered
+ * with. `menuItems` is the caller-resolved, current menu (e.g. from
+ * `getMenuConfig()`) so this stays pure/testable with fixtures instead of
+ * reaching into Mongo itself. Unavailable items are always excluded, even if
+ * the caller passes an unfiltered list.
  */
 export function computeOrder(
   items: OrderLineInput[],
-  fulfillment: Fulfillment
+  fulfillment: Fulfillment,
+  menuItems: GabriellosMenuItem[]
 ): OrderTotals {
   const lines: OrderLine[] = [];
   for (const item of items) {
-    const menuItem = getItemById(item.id);
+    const menuItem = menuItems.find((m) => m.id === item.id);
     const quantity = Math.max(0, Math.floor(item.quantity));
-    if (!menuItem || quantity <= 0) continue;
+    if (!menuItem || !menuItem.available || quantity <= 0) continue;
     lines.push({
       id: menuItem.id,
       name: menuItem.name,

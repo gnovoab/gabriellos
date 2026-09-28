@@ -1,4 +1,4 @@
-export type MenuCategory = "classic" | "calzone-focaccia" | "innovative";
+export type MenuCategory = "classic" | "calzone-focaccia" | "innovative" | "specials";
 
 export interface MenuCategoryInfo {
   id: MenuCategory;
@@ -33,8 +33,16 @@ export const MENU_CATEGORIES: MenuCategoryInfo[] = [
     label: "Innovative Pizzas",
     blurb: "Modern and rustic twists on Italian tradition.",
   },
+  {
+    id: "specials",
+    label: "Limited Time Only",
+    blurb: "Hand-picked by the pizzaiolo — available while they last.",
+  },
 ];
 
+// Seed/fallback data only — the live source of truth is Mongo via
+// src/lib/db/menuConfig.ts. This array is used to seed the database once and
+// as an offline fallback if Mongo is unconfigured or unreachable.
 export const MENU: MenuItem[] = [
   {
     id: "margherita",
@@ -80,7 +88,6 @@ export const MENU: MenuItem[] = [
     id: "napoli",
     number: 5,
     name: "Napolitan",
-    style: "Classic Neapolitan — Anchovy, Olive & Caper",
     category: "classic",
     price: 12.5,
     image: "https://italianfoodforever.com/wp-content/uploads/2015/01/napolipizza4.jpg",
@@ -305,6 +312,16 @@ export const MENU: MenuItem[] = [
     price: 14.5,
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4c90OTCp_IEocTO38KnTvWuXxhkRs-NpLzRLtET9QDw&s=10",
     description: "White base, sausage, mushrooms, parmesan, olive oil. No tomato.",
+  },
+  {
+    id: "cetarese",
+    number: 35,
+    name: "Cetarese",
+    style: "Pizza di Cetara — Amalfi Coast, Post-Bake Anchovy",
+    category: "innovative",
+    price: 15.0,
+    image: "https://lnx.spaghettitaliani.com/si/wp-content/uploads/2022/02/Pizza-Cetarese.jpg",
+    description: "Cherry tomatoes, fiordilatte or stracciatella, capers, olives, garlic, oregano, Alici di Cetara anchovies (post-bake).",
   },
 ];
 

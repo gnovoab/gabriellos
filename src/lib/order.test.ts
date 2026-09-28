@@ -6,20 +6,50 @@ import {
   orderReference,
   estimatedTime,
 } from "@/lib/order";
+import type { GabriellosMenuItem } from "@/lib/db/menuConfig";
 
-// Menu reference prices used in assertions:
-//   margherita = £9.50, napoli = £12.50
+// Fixture menu used in assertions:
+//   margherita = £9.50, napoli = £12.50, unavailable-item = £99 but not available
+const MENU_ITEMS: GabriellosMenuItem[] = [
+  {
+    id: "margherita",
+    number: 1,
+    name: "Margherita",
+    category: "classic",
+    description: "Tomato, mozzarella, basil, olive oil.",
+    price: 9.5,
+    available: true,
+  },
+  {
+    id: "napoli",
+    number: 5,
+    name: "Napolitan",
+    category: "classic",
+    description: "Tomato, mozzarella, anchovies, olives, capers, garlic, oregano.",
+    price: 12.5,
+    available: true,
+  },
+  {
+    id: "unavailable-item",
+    number: 99,
+    name: "Out of Stock Pizza",
+    category: "classic",
+    description: "Temporarily unavailable.",
+    price: 99,
+    available: false,
+  },
+];
 
 describe("computeOrder", () => {
   it("computes subtotal and adds the delivery fee for delivery orders", () => {
-    const order = computeOrder([{ id: "margherita", quantity: 2 }], "delivery");
+    const order = computeOrder([{ id: "margherita", quantity: 2 }], "delivery", MENU_ITEMS);
     expect(order.subtotal).toBe(19);
     expect(order.deliveryFee).toBe(DELIVERY_FEE);
     expect(order.total).toBe(19 + DELIVERY_FEE);
   });
 
   it("charges no delivery fee for collection orders", () => {
-    const order = computeOrder([{ id: "margherita", quantity: 2 }], "collection");
+    const order = computeOrder([{ id: "margherita", quantity: 2 }], "collection", MENU_ITEMS);
     expect(order.subtotal).toBe(19);
     expect(order.deliveryFee).toBe(0);
     expect(order.total).toBe(19);
@@ -31,7 +61,8 @@ describe("computeOrder", () => {
         { id: "margherita", quantity: 1 },
         { id: "napoli", quantity: 3 },
       ],
-      "collection"
+      "collection",
+      MENU_ITEMS
     );
     // 9.50 + (12.50 * 3) = 47.00
     expect(order.subtotal).toBe(47);
@@ -39,7 +70,7 @@ describe("computeOrder", () => {
   });
 
   it("uses trusted menu prices and names, not client-supplied data", () => {
-    const order = computeOrder([{ id: "margherita", quantity: 1 }], "collection");
+    const order = computeOrder([{ id: "margherita", quantity: 1 }], "collection", MENU_ITEMS);
     expect(order.lines[0]).toMatchObject({
       id: "margherita",
       name: "Margherita",
@@ -54,10 +85,21 @@ describe("computeOrder", () => {
         { id: "does-not-exist", quantity: 5 },
         { id: "margherita", quantity: 1 },
       ],
-      "collection"
+      "collection",
+      MENU_ITEMS
     );
     expect(order.lines).toHaveLength(1);
     expect(order.subtotal).toBe(9.5);
+  });
+
+  it("ignores unavailable items even when requested", () => {
+    const order = computeOrder(
+      [{ id: "unavailable-item", quantity: 1 }],
+      "collection",
+      MENU_ITEMS
+    );
+    expect(order.lines).toHaveLength(0);
+    expect(order.subtotal).toBe(0);
   });
 
   it("ignores zero and negative quantities", () => {
@@ -66,20 +108,21 @@ describe("computeOrder", () => {
         { id: "margherita", quantity: 0 },
         { id: "napoli", quantity: -2 },
       ],
-      "collection"
+      "collection",
+      MENU_ITEMS
     );
     expect(order.lines).toHaveLength(0);
     expect(order.subtotal).toBe(0);
   });
 
   it("floors fractional quantities", () => {
-    const order = computeOrder([{ id: "margherita", quantity: 2.9 }], "collection");
+    const order = computeOrder([{ id: "margherita", quantity: 2.9 }], "collection", MENU_ITEMS);
     expect(order.lines[0].quantity).toBe(2);
     expect(order.subtotal).toBe(19);
   });
 
   it("returns zeroed totals for an empty basket", () => {
-    const order = computeOrder([], "delivery");
+    const order = computeOrder([], "delivery", MENU_ITEMS);
     expect(order.lines).toHaveLength(0);
     expect(order.subtotal).toBe(0);
     expect(order.deliveryFee).toBe(0);
@@ -87,7 +130,7 @@ describe("computeOrder", () => {
   });
 
   it("does not add a delivery fee when no valid items remain", () => {
-    const order = computeOrder([{ id: "does-not-exist", quantity: 2 }], "delivery");
+    const order = computeOrder([{ id: "does-not-exist", quantity: 2 }], "delivery", MENU_ITEMS);
     expect(order.lines).toHaveLength(0);
     expect(order.deliveryFee).toBe(0);
     expect(order.total).toBe(0);

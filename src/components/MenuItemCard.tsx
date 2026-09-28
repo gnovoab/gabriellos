@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { MenuItem } from "@/lib/menu";
+import type { GabriellosMenuItem as MenuItem } from "@/lib/db/menuConfig";
 import { useBasketStore } from "@/store/useBasketStore";
 import { formatPrice } from "@/lib/utils";
 
@@ -48,7 +48,11 @@ export function MenuItemCard({ item, onOpen }: { item: MenuItem; onOpen: () => v
           <span className="font-mono text-sm font-semibold text-primary">{formatPrice(item.price)}</span>
 
           <div onClick={(e) => e.stopPropagation()}>
-            {qty === 0 ? (
+            {!item.available ? (
+              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Currently unavailable
+              </span>
+            ) : qty === 0 ? (
               <button
                 onClick={() => addItem({ id: item.id, name: item.name, price: item.price, image: item.image })}
                 aria-label={`Add ${item.name}`}
