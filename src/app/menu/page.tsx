@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   description: "In-restaurant menu display for Gabriello's.",
 };
 
+// Same reasoning as app/page.tsx: menu data comes from MongoDB (no fetch/
+// Request-time API), so without this Next.js would statically cache the
+// page at build time and never reflect admin edits.
+export const dynamic = "force-dynamic";
+
 // Read-only menu board for a large in-restaurant screen. No prices, no
 // ordering — this is deliberately not linked from the ordering site nav.
 // Mirrors the naming and card style of the pizzaiiolo /menu page (Il Menù,
