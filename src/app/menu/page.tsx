@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getMenuConfig, type GabriellosMenuItem } from "@/lib/db/menuConfig";
+import { getSettings } from "@/lib/db/settings";
 
 export const metadata: Metadata = {
   title: "Menu — Gabriello's",
@@ -11,12 +12,13 @@ export const metadata: Metadata = {
 // page at build time and never reflect admin edits.
 export const dynamic = "force-dynamic";
 
-// Read-only menu board for a large in-restaurant screen. No prices, no
-// ordering — this is deliberately not linked from the ordering site nav.
+// Read-only menu board for a large in-restaurant screen. No ordering — this
+// is deliberately not linked from the ordering site nav. Prices are shown or
+// hidden per the owner's global "showPrices" setting (pizzaiiolo admin).
 // Mirrors the naming and card style of the pizzaiiolo /menu page (Il Menù,
 // № numbering, image-top cards), scaled up for big-screen display.
 export default async function MenuDisplayPage() {
-  const menu = await getMenuConfig();
+  const [menu, settings] = await Promise.all([getMenuConfig(), getSettings()]);
   const pizzas = menu.filter((i) => i.available).sort((a, b) => a.number - b.number);
 
   return (
@@ -41,7 +43,7 @@ export default async function MenuDisplayPage() {
       <main className="max-w-[1800px] mx-auto px-6 sm:px-10 py-12">
         <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 xl:grid-cols-3">
           {pizzas.map((item) => (
-            <MenuCard key={item.id} item={item} />
+            <MenuCard key={item.id} item={item} showPrice={settings.showPrices} />
           ))}
         </div>
       </main>
@@ -49,7 +51,7 @@ export default async function MenuDisplayPage() {
   );
 }
 
-function MenuCard({ item }: { item: GabriellosMenuItem }) {
+function MenuCard({ item, showPrice }: { item: GabriellosMenuItem; showPrice: boolean }) {
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
       <div className="relative w-full aspect-[4/3] bg-muted border-b border-border/70 flex items-center justify-center">
@@ -63,11 +65,18 @@ function MenuCard({ item }: { item: GabriellosMenuItem }) {
         )}
       </div>
       <div className="p-5">
-        <div className="flex items-baseline gap-2 flex-wrap">
-          <span className="text-sm font-mono text-primary font-semibold">№ {item.number}</span>
-          <h3 className="font-serif font-semibold text-xl sm:text-2xl leading-tight text-foreground">
-            {item.name}
-          </h3>
+        <div className="flex items-baseline gap-2 flex-wrap justify-between">
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="text-sm font-mono text-primary font-semibold">№ {item.number}</span>
+            <h3 className="font-serif font-semibold text-xl sm:text-2xl leading-tight text-foreground">
+              {item.name}
+            </h3>
+          </div>
+          {showPrice && (
+            <span className="text-lg sm:text-xl font-serif font-semibold text-primary shrink-0">
+              £{item.price.toFixed(2)}
+            </span>
+          )}
         </div>
         {item.style && (
           <p className="text-sm sm:text-base text-secondary italic mt-1">{item.style}</p>

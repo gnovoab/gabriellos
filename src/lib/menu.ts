@@ -21,7 +21,7 @@ export const MENU_CATEGORIES: MenuCategoryInfo[] = [
   {
     id: "classic",
     label: "Classic Pizzas",
-    blurb: "Our wood-fired Neapolitan classics on a traditional tomato or bianca base.",
+    blurb: "Our authentic Neapolitan classics on a traditional tomato or bianca base.",
   },
   {
     id: "calzone-focaccia",
