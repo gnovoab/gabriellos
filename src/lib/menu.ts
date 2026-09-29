@@ -1,4 +1,4 @@
-export type MenuCategory = "classic" | "calzone-focaccia" | "innovative" | "specials";
+export type MenuCategory = "classic" | "calzone-focaccia" | "innovative" | "le-nostre" | "specials";
 
 export interface MenuCategoryInfo {
   id: MenuCategory;
@@ -32,6 +32,11 @@ export const MENU_CATEGORIES: MenuCategoryInfo[] = [
     id: "innovative",
     label: "Innovative Pizzas",
     blurb: "Modern and rustic twists on Italian tradition.",
+  },
+  {
+    id: "le-nostre",
+    label: "Le Nostre",
+    blurb: "Rustic, house-style pizzas from our kitchen.",
   },
   {
     id: "specials",

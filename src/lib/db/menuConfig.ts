@@ -2,7 +2,7 @@ import type { WithId, Document } from "mongodb";
 import clientPromise from "./mongo";
 import { MENU } from "@/lib/menu";
 
-export type MenuCategory = "classic" | "innovative" | "calzone-focaccia" | "specials";
+export type MenuCategory = "classic" | "innovative" | "le-nostre" | "calzone-focaccia" | "specials";
 
 export interface GabriellosMenuItem {
   id: string;
