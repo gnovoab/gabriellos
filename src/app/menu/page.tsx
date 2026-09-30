@@ -23,18 +23,18 @@ export default async function MenuDisplayPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-border bg-secondary/10">
+      <header className="border-b border-shell-border bg-shell">
         <div className="max-w-[1800px] mx-auto px-6 sm:px-10 py-10 sm:py-14 text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-[0.5em] text-secondary font-medium">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.5em] text-primary/80 font-medium">
             Handmade · Napoletana
           </p>
-          <h1 className="font-serif text-5xl sm:text-6xl xl:text-7xl font-semibold mt-3 text-primary">
+          <h1 className="font-script text-6xl sm:text-7xl xl:text-8xl mt-3 -rotate-2 inline-block text-primary drop-shadow-md">
             Gabriello&apos;s
           </h1>
-          <p className="text-[11px] sm:text-sm uppercase tracking-[0.4em] text-secondary font-medium mt-6">
+          <p className="text-[11px] sm:text-sm uppercase tracking-[0.4em] text-primary/80 font-medium mt-6">
             Il Menù
           </p>
-          <p className="text-muted-foreground text-lg sm:text-xl mt-3 italic">
+          <p className="text-white/60 text-lg sm:text-xl mt-3 italic">
             {pizzas.length} pizzas available
           </p>
         </div>
@@ -47,6 +47,23 @@ export default async function MenuDisplayPage() {
           ))}
         </div>
       </main>
+
+      <footer className="relative w-full h-64 sm:h-80 lg:h-[26rem] overflow-hidden border-t border-border mt-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/bg.jpeg"
+          alt="Gabriello's — chef's kiss"
+          className="absolute inset-0 w-full h-full object-cover object-[30%_30%]"
+        />
+        <div className="absolute left-[6%] sm:left-[12%] top-[8%] sm:top-[10%] -rotate-6">
+          <p className="font-script text-[#F4A261] text-5xl sm:text-7xl lg:text-8xl leading-none [text-shadow:0_4px_10px_rgba(0,0,0,0.5)]">
+            Gabriello&apos;s
+          </p>
+          <p className="font-script text-white text-2xl sm:text-4xl lg:text-5xl leading-tight mt-1 [text-shadow:0_2px_8px_rgba(0,0,0,0.55)]">
+            Authentic Napoletana Pizza
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

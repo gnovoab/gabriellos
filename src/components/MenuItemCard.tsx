@@ -28,24 +28,28 @@ export function MenuItemCard({ item, onOpen }: { item: MenuItem; onOpen: () => v
       tabIndex={0}
       onClick={onOpen}
       onKeyDown={onKey}
-      className="group text-left flex gap-4 p-3 rounded-xl border border-border bg-card cursor-pointer hover:border-primary/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      className="group text-left flex flex-col overflow-hidden rounded-xl border border-border bg-card cursor-pointer hover:border-primary/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
-      <div className="relative shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-muted border border-border/70 flex items-center justify-center">
+      <div className="relative w-full aspect-[4/3] overflow-hidden bg-muted flex items-center justify-center">
         {item.image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={item.image} alt={item.name} className="absolute inset-0 w-full h-full object-cover" />
+          <img
+            src={item.image}
+            alt={item.name}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
         ) : (
-          <div className="text-4xl opacity-40 group-hover:opacity-60 transition-opacity">🍕</div>
+          <div className="text-5xl opacity-40 group-hover:opacity-60 transition-opacity">🍕</div>
         )}
       </div>
 
-      <div className="flex-1 min-w-0 flex flex-col py-0.5">
+      <div className="flex-1 min-w-0 flex flex-col p-4">
         <h3 className="font-serif font-semibold text-lg sm:text-xl leading-tight text-foreground">{item.name}</h3>
-        {item.style && <p className="text-xs text-secondary italic mt-0.5">{item.style}</p>}
+        {item.style && <p className="text-xs text-[#C84B31] italic mt-0.5">{item.style}</p>}
         <p className="text-sm text-muted-foreground mt-1.5 leading-snug line-clamp-2">{item.description}</p>
 
-        <div className="mt-auto flex items-center justify-between gap-3 pt-2.5">
-          <span className="font-mono text-sm font-semibold text-primary">{formatPrice(item.price)}</span>
+        <div className="mt-auto flex items-center justify-between gap-3 pt-3">
+          <span className="font-mono text-lg font-bold text-[#2A2A2A]">{formatPrice(item.price)}</span>
 
           <div onClick={(e) => e.stopPropagation()}>
             {!item.available ? (
@@ -56,24 +60,24 @@ export function MenuItemCard({ item, onOpen }: { item: MenuItem; onOpen: () => v
               <button
                 onClick={() => addItem({ id: item.id, name: item.name, price: item.price, image: item.image })}
                 aria-label={`Add ${item.name}`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold px-4 py-1.5 hover:bg-primary hover:text-primary-foreground hover:border-primary active:scale-95 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 text-stone-900 text-sm font-semibold px-3.5 py-1.5 hover:bg-[#C84B31] hover:text-white active:scale-95 transition-colors"
               >
                 <span className="text-base leading-none" aria-hidden>+</span> Add
               </button>
             ) : (
-              <div className="flex items-center gap-3 rounded-full bg-card border border-primary/40 px-2 py-1 shadow-sm">
+              <div className="flex items-center gap-3 rounded-full bg-stone-100 border border-stone-200 text-stone-800 px-2 py-1">
                 <button
                   onClick={() => decrement(item.id)}
                   aria-label={`Remove one ${item.name}`}
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 text-lg leading-none"
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-stone-700 hover:bg-stone-200 text-lg leading-none"
                 >
                   −
                 </button>
-                <span className="min-w-4 text-center text-sm font-semibold tabular-nums">{qty}</span>
+                <span className="min-w-4 text-center text-sm font-semibold tabular-nums text-stone-900">{qty}</span>
                 <button
                   onClick={() => increment(item.id)}
                   aria-label={`Add one ${item.name}`}
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 text-lg leading-none"
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-stone-700 hover:bg-stone-200 text-lg leading-none"
                 >
                   +
                 </button>

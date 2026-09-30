@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
+import { Inter, Fraunces, JetBrains_Mono, Caveat } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,6 +21,13 @@ const mono = JetBrains_Mono({
   display: "swap",
 });
 
+const caveat = Caveat({
+  variable: "--font-script",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Gabriello's — Handmade Napoletana Pizza",
   description: "We keep our friends close — and our dough closer. Order handmade Napoletana pizza from Gabriello's.",
@@ -34,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${fraunces.variable} ${mono.variable}`}
+      className={`${inter.variable} ${fraunces.variable} ${mono.variable} ${caveat.variable}`}
     >
       <body className="bg-background text-foreground antialiased">
         {children}

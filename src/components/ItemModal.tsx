@@ -60,7 +60,7 @@ export function ItemModal({ item, onClose }: { item: MenuItem; onClose: () => vo
             {item.style && <p className="text-sm text-secondary italic mt-1">{item.style}</p>}
           </div>
           <p className="text-[15px] leading-relaxed text-foreground/90">{item.description}</p>
-          <p className="font-mono text-lg font-semibold text-primary">{formatPrice(item.price)}</p>
+          <p className="font-mono text-xl font-bold text-primary">{formatPrice(item.price)}</p>
         </div>
 
         <div className="border-t border-border p-4 sm:p-5 flex items-center gap-4 bg-card">

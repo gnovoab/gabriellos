@@ -97,8 +97,8 @@ export function PaymentSection({
     appearance: {
       theme: "flat",
       variables: {
-        colorPrimary: "#C2410C",
-        colorText: "#3A2A1E",
+        colorPrimary: "#F4A261",
+        colorText: "#2B2B2B",
         fontFamily: "system-ui, sans-serif",
         borderRadius: "10px",
       },

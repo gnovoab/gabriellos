@@ -26,7 +26,7 @@ function SuccessContent() {
   }, [succeeded, cleared, clear]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-secondary/10">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-shell">
       <div className="w-full max-w-md rounded-2xl border border-border bg-card shadow-sm p-8 text-center">
         {succeeded ? (
           <>

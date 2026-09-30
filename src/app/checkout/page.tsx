@@ -67,12 +67,12 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-border bg-secondary/10">
+      <header className="border-b border-shell-border bg-shell">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="font-serif text-2xl font-semibold text-primary">
+          <Link href="/" className="font-script text-3xl text-primary -rotate-2 inline-block">
             Gabriello&apos;s
           </Link>
-          <Link href="/" className="text-sm text-muted-foreground hover:text-primary transition">
+          <Link href="/" className="text-sm text-white/60 hover:text-primary transition">
             ← Back to menu
           </Link>
         </div>
