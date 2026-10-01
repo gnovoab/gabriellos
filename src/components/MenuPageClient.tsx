@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MENU_CATEGORIES } from "@/lib/menu";
 import type { GabriellosMenuItem } from "@/lib/db/menuConfig";
+import type { MenuCategoryDoc } from "@/lib/menuCategories";
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { ItemModal } from "@/components/ItemModal";
 import { Basket } from "@/components/Basket";
 import { useBasketStore, selectTotalItems, selectTotalPrice } from "@/store/useBasketStore";
 import { formatPrice } from "@/lib/utils";
 
-export function MenuPageClient({ items }: { items: GabriellosMenuItem[] }) {
+export function MenuPageClient({
+  items,
+  categories,
+}: {
+  items: GabriellosMenuItem[];
+  categories: MenuCategoryDoc[];
+}) {
   const [selected, setSelected] = useState<GabriellosMenuItem | null>(null);
   const [basketOpen, setBasketOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -17,7 +23,8 @@ export function MenuPageClient({ items }: { items: GabriellosMenuItem[] }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const visibleCategories = MENU_CATEGORIES.filter((c) => items.some((i) => i.category === c.id));
+  const sortedCategories = [...categories].sort((a, b) => a.sortOrder - b.sortOrder);
+  const visibleCategories = sortedCategories.filter((c) => items.some((i) => i.category === c.id));
 
   useEffect(() => {
     const sections = visibleCategories
@@ -98,10 +105,7 @@ export function MenuPageClient({ items }: { items: GabriellosMenuItem[] }) {
             return (
               <section key={c.id} id={c.id} className="space-y-4 scroll-mt-24">
                 <div className="flex items-end justify-between gap-4 border-b-2 border-primary/20 pb-3">
-                  <div>
-                    <h2 className="font-serif text-2xl sm:text-3xl font-semibold">{c.label}</h2>
-                    <p className="text-sm text-muted-foreground mt-1 italic">{c.blurb}</p>
-                  </div>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold">{c.label}</h2>
                   <span className="font-mono text-xs text-muted-foreground shrink-0">{cItems.length} pizzas</span>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

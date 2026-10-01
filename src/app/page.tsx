@@ -1,4 +1,5 @@
 import { getMenuConfig } from "@/lib/db/menuConfig";
+import { getCategories } from "@/lib/db/categories";
 import { MenuPageClient } from "@/components/MenuPageClient";
 
 // Menu data lives in MongoDB and is edited from the pizzaiiolo admin at any
@@ -8,8 +9,8 @@ import { MenuPageClient } from "@/components/MenuPageClient";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const menu = await getMenuConfig();
+  const [menu, categories] = await Promise.all([getMenuConfig(), getCategories()]);
   const items = menu.filter((i) => i.available);
 
-  return <MenuPageClient items={items} />;
+  return <MenuPageClient items={items} categories={categories} />;
 }

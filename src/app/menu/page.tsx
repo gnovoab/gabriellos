@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getMenuConfig, type GabriellosMenuItem } from "@/lib/db/menuConfig";
 import { getSettings } from "@/lib/db/settings";
+import { getCategories } from "@/lib/db/categories";
+import type { MenuCategoryDoc } from "@/lib/menuCategories";
 
 export const metadata: Metadata = {
   title: "Menu — Gabriello's",
@@ -16,10 +18,18 @@ export const dynamic = "force-dynamic";
 // is deliberately not linked from the ordering site nav. Prices are shown or
 // hidden per the owner's global "showPrices" setting (pizzaiiolo admin).
 // Mirrors the naming and card style of the pizzaiiolo /menu page (Il Menù,
-// № numbering, image-top cards), scaled up for big-screen display.
+// № numbering, image-top cards, category sections), scaled up for big-screen
+// display.
 export default async function MenuDisplayPage() {
-  const [menu, settings] = await Promise.all([getMenuConfig(), getSettings()]);
+  const [menu, settings, categories] = await Promise.all([getMenuConfig(), getSettings(), getCategories()]);
   const pizzas = menu.filter((i) => i.available).sort((a, b) => a.number - b.number);
+  const sortedCategories = [...categories].sort((a, b) => a.sortOrder - b.sortOrder);
+  const knownIds = new Set(sortedCategories.map((c) => c.id));
+  const orphanItems = pizzas.filter((p) => !knownIds.has(p.category));
+  const sections: MenuCategoryDoc[] = [
+    ...sortedCategories,
+    ...(orphanItems.length ? [{ id: "__other__", label: "Other", sortOrder: Infinity }] : []),
+  ];
 
   return (
     <div className="min-h-screen">
@@ -40,12 +50,24 @@ export default async function MenuDisplayPage() {
         </div>
       </header>
 
-      <main className="max-w-[1800px] mx-auto px-6 sm:px-10 py-12">
-        <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 xl:grid-cols-3">
-          {pizzas.map((item) => (
-            <MenuCard key={item.id} item={item} showPrice={settings.showPrices} />
-          ))}
-        </div>
+      <main className="max-w-[1800px] mx-auto px-6 sm:px-10 py-12 space-y-10">
+        {sections.map((c) => {
+          const cItems = c.id === "__other__" ? orphanItems : pizzas.filter((p) => p.category === c.id);
+          if (cItems.length === 0) return null;
+          return (
+            <section key={c.id} className="space-y-4">
+              <div className="flex items-end justify-between gap-4 border-b-2 border-primary/20 pb-3">
+                <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground">{c.label}</h2>
+                <span className="font-mono text-xs text-muted-foreground shrink-0">{cItems.length} pizzas</span>
+              </div>
+              <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 xl:grid-cols-3">
+                {cItems.map((item) => (
+                  <MenuCard key={item.id} item={item} showPrice={settings.showPrices} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </main>
 
       <footer className="relative w-full h-64 sm:h-80 lg:h-[26rem] overflow-hidden border-t border-border mt-4">

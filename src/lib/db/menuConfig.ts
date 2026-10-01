@@ -2,7 +2,11 @@ import type { WithId, Document } from "mongodb";
 import clientPromise from "./mongo";
 import { MENU } from "@/lib/menu";
 
-export type MenuCategory = "classic" | "innovative" | "pumpkin" | "le-nostre" | "calzone-focaccia" | "specials";
+// Categories are admin-managed (create/rename/reorder/delete) from pizzaiiolo
+// and stored in the shared `categories` collection — see
+// src/lib/db/categories.ts. A menu item's `category` is just the id of one
+// of those documents, so this can't be a fixed union.
+export type MenuCategory = string;
 
 export interface GabriellosMenuItem {
   id: string;
